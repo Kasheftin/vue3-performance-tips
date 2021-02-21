@@ -1,18 +1,34 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <h1>
+      Vue.js Rerendering samples
+    </h1>
+    <div v-for="page in pages" :key="page.name">
+      <h3>
+        <router-link :to="page.name">
+          {{ page.title }}
+        </router-link>
+      </h3>
+      <div>
+        {{ page.description }}
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import { defineComponent } from 'vue'
+import { routes } from '@/router/routes'
 
-export default {
-  name: 'Home',
-  components: {
-    HelloWorld
+export default defineComponent({
+  computed: {
+    pages () {
+      const examples = routes.find(route => route.name === 'examples')
+      return ((examples || {}).children || []).map(route => ({
+        ...(route.meta || {}),
+        name: route.name
+      }))
+    }
   }
-}
+})
 </script>
