@@ -5,6 +5,7 @@ import Example2 from '@/views/Example2.vue'
 import Example3 from '@/views/Example3.vue'
 import Example4p1 from '@/views/Example4p1.vue'
 import Example4p2 from '@/views/Example4p2.vue'
+import Example4p3WithEmits from '@/views/Example4p3WithEmits.vue'
 import Example4p3 from '@/views/Example4p3.vue'
 import Example4p4 from '@/views/Example4p4.vue'
 import Example5 from '@/views/Example5.vue'
@@ -123,6 +124,21 @@ From the other side, isChecked computed refers to the entire checkedIds array wh
 The reason of broken reordering is that vue3 can not cache an event handler if it refers to a scope variable.
 Every reorder creates a new event function that causes the <Item> component to update.
 Luckly it's easy to fix. In this example we initialize event arguments inside <Item> component, that's why items reordering works correctly.
+          `,
+          instructions: `
+Try to reorder items. Notice <Item> components are not updated.
+          `
+        }
+      },
+      {
+        path: '/example4p3-with-emits',
+        name: 'example4p3-with-emits',
+        component: Example4p3WithEmits,
+        meta: {
+          title: 'Example 4.3.1 Fixing Item Reordering With Emits (for vue3)',
+          description: `
+The other way to fix scoped variable event rerendering is to specify emits array.
+Emits is a new feature from vue3. In our case ItemWithRenameById can emits 2 events, both have to be specified like emits: ['set-checked', 'rename'].
           `,
           instructions: `
 Try to reorder items. Notice <Item> components are not updated.
