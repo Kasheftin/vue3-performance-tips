@@ -9,6 +9,9 @@ import Example4p3WithEmits from '@/views/Example4p3WithEmits.vue'
 import Example4p3 from '@/views/Example4p3.vue'
 import Example4p4 from '@/views/Example4p4.vue'
 import Example5 from '@/views/Example5.vue'
+import Example6p1 from '@/views/Example6p1.vue'
+import Example6p2 from '@/views/Example6p2.vue'
+import Example6p3 from '@/views/Example6p3.vue'
 
 export const routes = [
   {
@@ -177,6 +180,60 @@ This trick shows how IntersectionObserver can be used to skip DOM updates for th
 Add some items. Each item toggles a heavy svg to blink every 500ms. Notice how lattency grows.
 Enable IntersectionObserver. It will hide svg-s outside of the viewport by using css display none.
 That helps performance a lot.
+          `
+        }
+      },
+      {
+        path: '/example6p1',
+        name: 'example6p1',
+        component: Example6p1,
+        meta: {
+          title: 'Example 6.1. Array-type prop rerendering issue',
+          description: `
+We have ITEM many-to-many TAG relation in the store and try to avoid unnecessary rerendering while showing items with tags.
+          `,
+          instructions: `
+Try to assign/unassign item to tag using checkboxes. Notice that only one target <ItemWithTag> component updates.
+          `,
+          explanation: `
+We show only the first tag, assigned to an item.
+That's why it works correctly. When relation changes, only the target ItemWithTag component gets updated.
+That happens despite itemsWithTags provides a new array consisting on new objects.
+During the update each new object {id, item, firstTag} still consists on the same objects as before.
+We send them separately <ItemWithTag :item="combinedEntry.item" :tag="combinedEntry.firstTag">.
+          `
+        }
+      },
+      {
+        path: '/example6p2',
+        name: 'example6p2',
+        component: Example6p2,
+        meta: {
+          title: 'Example 6.2. Array-type prop rerendering issue',
+          description: `
+Here we try to show all the tags, assigned to an item. And we fail to do that without unnecessary rerendering.
+          `,
+          instructions: `
+Try to assign/unassign item to tag using checkboxes. Notice that all the <ItemWithTags> components get updated.
+          `,
+          explanation: `
+When a new relation created, the itemWithTags getter constructs new objects {id, item, tags}.
+The last property, tags, is a new array. For all the items but one this array consists on the same objects in the same order as before.
+But since that's a new array, sending it to each <ItemWithTags :tags="combinedEntry.tags"> forces the last to update.
+          `
+        }
+      },
+      {
+        path: '/example6p3',
+        name: 'example6p3',
+        component: Example6p3,
+        meta: {
+          title: 'Example 6.3. Array-type prop rerendering issue',
+          description: `
+Here we solve the issue in a very ugly way: tags="JSON.stringify(combinedEntry.tags)". Now it's a string, rerendering works correctly.
+         `,
+          instructions: `
+Try to assign/unassign item to tag using checkboxes. Notice that only one target <ItemWithTag> component updates.
           `
         }
       }
