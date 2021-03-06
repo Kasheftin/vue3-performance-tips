@@ -56,8 +56,8 @@ export default defineComponent({
     ItemWithTags
   },
   computed: {
-    ...mapState('example6p4', ['itemTags']),
-    ...mapGetters('example6p4', {
+    ...mapState('example7p1', ['itemTags']),
+    ...mapGetters('example7p1', {
       plainItems: 'plainItems',
       plainTags: 'plainTags',
       itemsWithTags: 'itemsWithTags'
@@ -70,18 +70,18 @@ export default defineComponent({
     reset () {
       const items = Array(10).fill().map((value, index) => ({ id: index + 1, title: `Item ${index + 1}` }))
       const tags = Array(5).fill().map((value, index) => ({ id: index + 1, title: `Tag ${index + 1}` }))
-      this.$store.commit('example6p4/reset')
-      this.$store.commit('example6p4/addItems', items)
-      this.$store.commit('example6p4/addTags', tags)
+      this.$store.commit('example7p1/reset')
+      this.$store.commit('example7p1/addItems', items)
+      this.$store.commit('example7p1/addTags', tags)
     },
     toggleItemTag (itemId, tagId) {
-      this.$store.commit('example6p4/toggleItemTag', { itemId, tagId })
+      this.$store.commit('example7p1/toggleItemTag', { itemId, tagId })
     },
     updateTagTitle ({ tagId, title }) {
-      this.$store.commit('example6p4/updateTagTitle', { tagId, title })
+      this.$store.commit('example7p1/updateTagTitle', { tagId, title })
     },
     updateItemTitle ({ itemId, title }) {
-      this.$store.commit('example6p4/updateItemTitle', { itemId, title })
+      this.$store.commit('example7p1/updateItemTitle', { itemId, title })
     }
   }
 })

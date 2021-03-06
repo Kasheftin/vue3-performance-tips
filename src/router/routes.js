@@ -12,7 +12,7 @@ import Example5 from '@/views/Example5.vue'
 import Example6p1 from '@/views/Example6p1.vue'
 import Example6p2 from '@/views/Example6p2.vue'
 import Example6p3 from '@/views/Example6p3.vue'
-import Example6p4 from '@/views/Example6p4.vue'
+import Example7p1 from '@/views/Example7p1.vue'
 
 export const routes = [
   {
@@ -239,11 +239,11 @@ Try to assign/unassign item to tag using checkboxes. Notice that only one target
         }
       },
       {
-        path: '/example6p4',
-        name: 'example6p4',
-        component: Example6p4,
+        path: '/example7p1',
+        name: 'example7p1',
+        component: Example7p1,
         meta: {
-          title: 'Example 6.4. Array-type prop rerendering issue',
+          title: 'Example 7.1. Solving re-rendeing issue using selective-object-reuse',
           description: `
 Solving array re-rendering by the trivial selective-object-reuse package that caches the value and recursively substitutes the matching parts.
           `,
