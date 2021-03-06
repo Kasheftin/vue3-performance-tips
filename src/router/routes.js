@@ -12,6 +12,7 @@ import Example5 from '@/views/Example5.vue'
 import Example6p1 from '@/views/Example6p1.vue'
 import Example6p2 from '@/views/Example6p2.vue'
 import Example6p3 from '@/views/Example6p3.vue'
+import Example6p4 from '@/views/Example6p4.vue'
 
 export const routes = [
   {
@@ -234,6 +235,26 @@ Here we solve the issue in a very ugly way: tags="JSON.stringify(combinedEntry.t
          `,
           instructions: `
 Try to assign/unassign item to tag using checkboxes. Notice that only one target <ItemWithTag> component updates.
+          `
+        }
+      },
+      {
+        path: '/example6p4',
+        name: 'example6p4',
+        component: Example6p4,
+        meta: {
+          title: 'Example 6.4. Array-type prop rerendering issue',
+          description: `
+Solving array re-rendering by the trivial selective-object-reuse package that caches the value and recursively substitutes the matching parts.
+          `,
+          instructions: `
+Assign some items to tags using checkboxes, then rename item or tag. Notice that only the correct components get updated during any action.
+          `,
+          explanation: `
+When itemsWithTags getter runs for the first time, it generates a complex nested structure. This value cached in just a separate global variable.
+When any change triggers itemsWithTags to rebuild, selective-object-reuse recursively compares the new object with the cached one.
+If some object-type parts are equal, it substitutes the old values instead of the new ones. For example, [1, 2, 3] != [1, 2, 3], but wrap([1, 2, 3]) === wrap([1, 2, 3]).
+This substitution allows to skip re-rendering when the new-but-all-the-same object passed as a prop to a vue component.
           `
         }
       }

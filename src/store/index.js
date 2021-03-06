@@ -4,6 +4,7 @@ import * as example2 from './example2'
 import * as example3 from './example3'
 import * as example4 from './example4'
 import * as example6 from './example6'
+import * as example6p4 from './example6p4'
 
 export default createStore({
   modules: {
@@ -11,6 +12,7 @@ export default createStore({
     example2: { ...example2, namespaced: true },
     example3: { ...example3, namespaced: true },
     example4: { ...example4, namespaced: true },
-    example6: { ...example6, namespaced: true }
+    example6: { ...example6, namespaced: true },
+    example6p4: { ...example6p4, namespaced: true }
   }
 })
