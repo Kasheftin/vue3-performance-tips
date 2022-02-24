@@ -5,8 +5,6 @@ import Example2 from '@/views/Example2.vue'
 import Example3 from '@/views/Example3.vue'
 import Example4p1 from '@/views/Example4p1.vue'
 import Example4p2 from '@/views/Example4p2.vue'
-import Example4p3WithEmits from '@/views/Example4p3WithEmits.vue'
-import Example4p3 from '@/views/Example4p3.vue'
 import Example4p4 from '@/views/Example4p4.vue'
 import Example5 from '@/views/Example5.vue'
 import Example6p1 from '@/views/Example6p1.vue'
@@ -90,13 +88,14 @@ Incorrect component-code splitting causes every <Item> component rerendering whe
           instructions: `
 Add some items. Check an item, rename it or move.
 Notice that alongside with the target all the rest <Item> components trigger rerendering as well (use vue devtools performance component render tab).
-          `
+          `,
+          stage: 1
         }
       },
       {
         path: '/example4p2',
         name: 'example4p2',
-        component: Example4p2,
+        component: Example4p1,
         meta: {
           title: 'Example 4.2. Fixing Item Rename (reordering works in vue2 and is broken in vue3)',
           description: `
@@ -115,13 +114,14 @@ Check the next example for the explanation.
 Renaming works correctly because here we refer to the original itemsByIds object.
 Renaming mutation does not update the entire object - it updates only particular item inside.
 From the other side, isChecked computed refers to the entire checkedIds array while trying to find if the item is checked.
-          `
+          `,
+          stage: 2
         }
       },
       {
         path: '/example4p3',
         name: 'example4p3',
-        component: Example4p3,
+        component: Example4p2,
         meta: {
           title: 'Example 4.3 Fixing Item Reordering (for vue3)',
           description: `
@@ -131,13 +131,14 @@ Luckly it's easy to fix. In this example we initialize event arguments inside <I
           `,
           instructions: `
 Try to reorder items. Notice <Item> components are not updated.
-          `
+          `,
+          stage: 3
         }
       },
       {
         path: '/example4p3-with-emits',
         name: 'example4p3-with-emits',
-        component: Example4p3WithEmits,
+        component: Example4p1,
         meta: {
           title: 'Example 4.3.1 Fixing Item Reordering With Emits (for vue3)',
           description: `
@@ -146,7 +147,8 @@ Emits is a new feature from vue3. In our case ItemWithRenameById can emits 2 eve
           `,
           instructions: `
 Try to reorder items. Notice <Item> components are not updated.
-          `
+          `,
+          stage: 4
         }
       },
       {

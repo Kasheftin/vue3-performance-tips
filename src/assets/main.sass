@@ -9,6 +9,12 @@ h3
 a
   color: #42b983
 
+@keyframes highlight
+  0%
+    background-color: #ee39
+  100%
+    background-color: none
+
 body
   overflow: hidden
 
@@ -37,6 +43,8 @@ body
   align-items: center
   &--multiline
     display: block
+  &--highlight
+    animation: highlight 1s
   &__check
     margin: 0 10px 0 0
     display: flex
@@ -73,3 +81,6 @@ body
 
 .rr-input-short
   width: 60px
+
+.rr-item-container--highlight
+  animation: highlight 1s

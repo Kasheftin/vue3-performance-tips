@@ -22,7 +22,7 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   props: {
     itemId: {
-      type: Number,
+      type: String,
       required: true
     }
   },
@@ -35,7 +35,7 @@ export default defineComponent({
     }
   },
   updated () {
-    console.count('ItemWithRenameById2 updated')
+    console.log('ItemWithRenameById2')
   }
 })
 </script>

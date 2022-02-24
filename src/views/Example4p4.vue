@@ -3,11 +3,13 @@
     <div>
       <button @click="addItems">Add 10 items</button>
       <button @click="reset">Reset store</button>
-      <button @click="randomize">Randomize Items Order</button>
+      <button v-if="checkedIds.length" @click="deleteCheckedItems">
+        Delete {{ checkedIds.length }} checked item{{ checkedIds.length === 1 ? '' : 's' }}
+      </button>
     </div>
     <draggable
-      :list="extendedItemsNested"
-      @change="updateItemsOrder"
+      :value="extendedItemsNested"
+      @update="updateItemsOrder"
     >
       <ItemWithRename
         v-for="extendedItem in extendedItemsNested"
@@ -23,27 +25,29 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
+import uniqid from 'uniqid'
 import { VueDraggableNext as draggable } from 'vue-draggable-next'
 import ItemWithRename from '@/components/ItemWithRename'
 
-let itemId = 0
-
 export default defineComponent({
   components: {
-    ItemWithRename,
-    draggable
+    draggable,
+    ItemWithRename
   },
   computed: {
-    ...mapState('example4', ['ids']),
-    ...mapGetters('example4', {
-      extendedItemsNested: 'extendedItemsNested'
-    })
+    ...mapState('example4', ['checkedIds']),
+    ...mapGetters('example4', ['extendedItemsNested'])
   },
   beforeUnmount () {
     this.reset()
   },
   methods: {
+    updateItemsOrder (event) {
+      if (event.type === 'update') {
+        this.$store.commit('example4/updateItemsOrder', { newIndex: event.newIndex, oldIndex: event.oldIndex })
+      }
+    },
     setCheckedItemById ({ id, isChecked }) {
       this.$store.commit('example4/setCheckedItemById', { id, isChecked })
     },
@@ -51,33 +55,22 @@ export default defineComponent({
       this.$store.commit('example4/renameItem', { id, title })
     },
     addItems () {
-      this.$store.commit('example4/addItems', Array(10).fill().map(this.getNewItem))
+      this.$store.commit('example4/addItems', Array(10).fill().map(() => this.createHeavyItem(2)))
     },
     reset () {
       this.$store.commit('example4/reset')
     },
-    getNewItem () {
-      itemId++
+    deleteCheckedItems () {
+      this.$store.commit('example4/deleteCheckedItems')
+    },
+    createHeavyItem (it, childrenCount = 10) {
+      const id = uniqid()
       return {
-        id: itemId,
-        title: `Item ${itemId}`,
-        hashes: Array(10).fill('Lorem ipsum dolor sit amet.')
+        id,
+        title: `Item ${id}`,
+        hashes: Array(10).fill('Lorem ipsum dolor sit amet.'),
+        children: it ? Array(childrenCount).fill().map(() => this.createHeavyItem(it - 1, childrenCount)) : []
       }
-    },
-    updateItemsOrder (event) {
-      if (event.moved) {
-        this.$store.commit('example4/updateItemsOrder', event.moved)
-      }
-    },
-    randomize () {
-      const ids = [...this.ids]
-      const newIds = []
-      while (ids.length) {
-        const r = Math.floor(Math.random() * ids.length)
-        newIds.push(ids[r])
-        ids.splice(r, 1)
-      }
-      this.$store.commit('example4/setItemsOrder', newIds)
     }
   }
 })

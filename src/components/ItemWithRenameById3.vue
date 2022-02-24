@@ -4,13 +4,13 @@
       <input
         :checked="isChecked"
         type="checkbox"
-        @change="$emit('set-checked', { id: item.id, isChecked: $event.target.checked })"
+        @change="$emit('set-checked-object', { id: item.id, isChecked: $event.target.checked })"
       >
     </div>
     <div class="rr-item__title">
       <input
         :value="item.title"
-        @change="$emit('rename', { id: item.id, title: $event.target.value })"
+        @change="$emit('rename-object', { id: item.id, title: $event.target.value })"
       >
     </div>
   </div>
@@ -22,7 +22,7 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   props: {
     itemId: {
-      type: Number,
+      type: String,
       required: true
     }
   },
@@ -35,7 +35,7 @@ export default defineComponent({
     }
   },
   updated () {
-    console.count('ItemWithRenameById2 updated')
+    console.log('ItemWithRenameById3')
   }
 })
 </script>

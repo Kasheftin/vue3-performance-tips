@@ -3,36 +3,54 @@
     <div>
       <button @click="addItems">Add 10 items</button>
       <button @click="reset">Reset store</button>
-      <button @click="randomize">Randomize Items Order</button>
+      <button v-if="checkedIds.length" @click="deleteCheckedItems">
+        Delete {{ checkedIds.length }} checked item{{ checkedIds.length === 1 ? '' : 's' }}
+      </button>
     </div>
-    <ItemWithRenameById2
-      v-for="id in ids"
-      :key="id"
-      :item-id="id"
-      @set-checked="setCheckedItemById({ id, isChecked: $event })"
-      @rename="renameItem({ id, title: $event })"
-    />
+    <draggable
+      :value="ids"
+      @update="updateItemsOrder"
+    >
+      <div
+        v-for="id in ids"
+        :key="id"
+      >
+        <component
+          :is="itemComponent"
+          :item-id="id"
+          @set-checked-object="setCheckedItemById"
+          @rename-object="renameItem"
+        />
+      </div>
+    </draggable>
   </div>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
 import { mapState } from 'vuex'
-import ItemWithRenameById2 from '@/components/ItemWithRenameById2'
-
-let itemId = 0
+import uniqid from 'uniqid'
+import { VueDraggableNext as draggable } from 'vue-draggable-next'
 
 export default defineComponent({
   components: {
-    ItemWithRenameById2
+    draggable
   },
   computed: {
-    ...mapState('example4', ['ids'])
+    ...mapState('example4', ['ids', 'checkedIds']),
+    itemComponent () {
+      return require(`@/components/ItemWithRenameById${this.$route.meta.stage}`).default
+    }
   },
   beforeUnmount () {
     this.reset()
   },
   methods: {
+    updateItemsOrder (event) {
+      if (event.type === 'update') {
+        this.$store.commit('example4/updateItemsOrder', { newIndex: event.newIndex, oldIndex: event.oldIndex })
+      }
+    },
     setCheckedItemById ({ id, isChecked }) {
       this.$store.commit('example4/setCheckedItemById', { id, isChecked })
     },
@@ -40,28 +58,22 @@ export default defineComponent({
       this.$store.commit('example4/renameItem', { id, title })
     },
     addItems () {
-      this.$store.commit('example4/addItems', Array(10).fill().map(this.getNewItem))
+      this.$store.commit('example4/addItems', Array(10).fill().map(() => this.createHeavyItem(2)))
     },
     reset () {
       this.$store.commit('example4/reset')
     },
-    getNewItem () {
-      itemId++
-      return {
-        id: itemId,
-        title: `Item ${itemId}`,
-        hashes: Array(10).fill('Lorem ipsum dolor sit amet.')
-      }
+    deleteCheckedItems () {
+      this.$store.commit('example4/deleteCheckedItems')
     },
-    randomize () {
-      const ids = [...this.ids]
-      const newIds = []
-      while (ids.length) {
-        const r = Math.floor(Math.random() * ids.length)
-        newIds.push(ids[r])
-        ids.splice(r, 1)
+    createHeavyItem (it, childrenCount = 10) {
+      const id = uniqid()
+      return {
+        id,
+        title: `Item ${id}`,
+        hashes: Array(10).fill('Lorem ipsum dolor sit amet.'),
+        children: it ? Array(childrenCount).fill().map(() => this.createHeavyItem(it - 1, childrenCount)) : []
       }
-      this.$store.commit('example4/setItemsOrder', newIds)
     }
   }
 })

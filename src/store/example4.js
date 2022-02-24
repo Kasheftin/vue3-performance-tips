@@ -72,5 +72,13 @@ export const mutations = {
     } else if (!isChecked && index !== -1) {
       state.checkedIds.splice(index, 1)
     }
+  },
+  deleteCheckedItems (state) {
+    state.ids = state.ids.filter(id => !state.checkedIds.includes(id))
+    state.itemsByIds = state.ids.reduce((out, id) => {
+      out[id] = state.itemsByIds[id]
+      return out
+    }, {})
+    state.checkedIds = []
   }
 }
